@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">rfhome</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="pref_user_profile">User Profile</string>
+
+    <string name="pref_user_name">Set User</string>
+    <string name="pref_user_name_summary"></string>
+
+    <string name="pref_user_password">Set Password</string>
+    <string name="pref_user_password_summary"></string>
+
+    <string name="pref_server_url">Server Url</string>
+    <string name="pref_server_url_summary"></string>
+
+    <string name="about_us_content">
+        This application build by Roman Fedorov and Natali Baranova.
+        \n\nIt allows you to send requests to smart home.
+        \n\nPlease send any of your feedback to rfedorov@renderedsource.com
+    </string>
+
+</resources>

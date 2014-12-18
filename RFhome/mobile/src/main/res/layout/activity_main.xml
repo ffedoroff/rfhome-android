@@ -1,0 +1,66 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/background_dark"
+    >
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/buttons_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+
+    <!--<LinearLayout style="@style/linearForButtons" >-->
+        <!--<Button style="@style/button2col"-->
+                <!--android:text="bbb"-->
+                <!--/>-->
+        <!--<Button style="@style/button2col"-->
+                <!--android:text="bbd"-->
+                <!--/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout style="@style/linearForButtons">-->
+        <!--<Button style="@style/button2col"-->
+                <!--android:text="bnm"-->
+                <!--/>-->
+        <!--<Button style="@style/button2col"-->
+                <!--android:text="bgm"-->
+                <!--/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout style="@style/linearForButtons">-->
+    <!--<Button style="@style/button1col" android:text="bgmss" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout style="@style/linearForButtons">-->
+        <!--<Button style="@style/button2col" android:text="bgmss" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout style="@style/linearForButtons">-->
+        <!--<Button style="@style/button2col" android:text="bgmss" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout style="@style/linearForButtons">-->
+        <!--<Button style="@style/button2col" android:text="bgmss" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout style="@style/linearForButtons">-->
+        <!--<Button style="@style/button2col" android:text="bgmss" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout style="@style/linearForButtons">-->
+        <!--<Button style="@style/button2col" android:text="bgmss" />-->
+    <!--</LinearLayout>-->
+
+    <!--<Button-->
+            <!--android:id="@+id/speak"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="speak"-->
+            <!--android:textAppearance="?android:attr/textAppearanceLarge" android:onClick="onRefreshClicked"-->
+            <!--android:minHeight="100dp"/>-->
+
+</LinearLayout>
+</ScrollView>
