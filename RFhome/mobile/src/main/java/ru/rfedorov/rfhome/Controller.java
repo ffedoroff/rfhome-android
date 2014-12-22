@@ -40,8 +40,8 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
 
         // Register the local broadcast receiver (listens wearable)
         IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
-        MessageReceiver messageReceiver = new MessageReceiver();
-        LocalBroadcastManager.getInstance(RFApplication.getAppContext()).registerReceiver(messageReceiver, messageFilter);
+        WearableReceiver wearableReceiver = new WearableReceiver();
+        LocalBroadcastManager.getInstance(RFApplication.getAppContext()).registerReceiver(wearableReceiver, messageFilter);
 
         googleClient = new GoogleApiClient.Builder(RFApplication.getAppContext())
                 .addApi(Wearable.API)
@@ -50,8 +50,13 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
                 .build();
         googleClient.connect();
 
+        reloadFromServer();
+    }
+
+    public void reloadFromServer() {
         new APIConnector().execute(AsyncApiCall.API_GET_JSON, "0");
     }
+
 
     protected void reLoadUnitsFromJson(String json) {
         try {
@@ -67,42 +72,50 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
             }
             ModelRFHome _model = new ModelRFHome(lastCall);
 
-            JSONArray units = json_reader.getJSONArray("units");
-            for (int i = 0; i < units.length(); i++) {
-                ModelUnit _munit = new ModelUnit();
-                JSONObject unit = units.getJSONObject(i);
-                Iterator<String> iterator = unit.keys();
-                String sectionName = null;
-                while (iterator.hasNext()) {
-                    String key = iterator.next();
-                    String value = unit.get(key).toString();
-                    if ("unit_type".equals(key)) _munit.setUnitType(value);
-                    if ("name".equals(key)) _munit.setName(value);
-                    if ("false".equals(key)) _munit.setLastFalseValueTime(Long.parseLong(value));
-                    if ("true".equals(key)) _munit.setLastTrueValueTime(Long.parseLong(value));
-                    if ("section".equals(key)) sectionName = value;
-                    if ("prime_unit_title".equals(key)) _munit.setPrimeUnitTitle(value);
+            JSONArray sections = json_reader.getJSONArray("sections");
+            for (int s = 0; s < sections.length(); s++) {
+                JSONObject j_section = sections.getJSONObject(s);
+                ModelSection m_section = new ModelSection(j_section.getString("name"));
+
+                JSONArray units = j_section.getJSONArray("units");
+                for (int i = 0; i < units.length(); i++) {
+                    ModelUnit _munit = new ModelUnit();
+                    JSONObject unit = units.getJSONObject(i);
+                    Iterator<String> iterator = unit.keys();
+                    while (iterator.hasNext()) {
+                        String key = iterator.next();
+                        String value = unit.get(key).toString();
+                        if ("unit_type".equals(key)) _munit.setUnitType(value);
+                        if ("name".equals(key)) _munit.setName(value);
+                        if ("false_time".equals(key))
+                            _munit.setLastFalseValueTime(Long.parseLong(value));
+                        if ("true_time".equals(key)) _munit.setLastTrueValueTime(Long.parseLong(value));
+                        //if ("section".equals(key)) sectionName = value;
+                        if ("prime_unit_title".equals(key)) _munit.setPrimeUnitTitle(value);
+                    }
+                    if (!_munit.isValid()) {
+                        Log.e(TAG, "Wrong unit in json: " + unit);
+                        continue;
+                    }
+//                if (sectionName == null || sectionName.isEmpty()) {
+//                    Log.e(TAG, "Wrong section in json: " + unit);
+//                    continue;
+//                }
+//                ModelSection section;
+//                if (_model.getSections().containsKey(sectionName)) {
+//                    section = _model.getSections().get(sectionName);
+//                } else {
+//                    section = new ModelSection(sectionName);
+//                    _model.getSections().put(section.getName(), section);
+//                }
+                    if (_munit.getPrimeUnitTitle() != null && !_munit.getPrimeUnitTitle().isEmpty()) {
+                        _model.getPrimeUnits().put(_munit.getPrimeUnitTitle(), _munit);
+                    }
+//                section.getUnits().add(_munit);
+                    m_section.getUnits().add(_munit);
+                    _model.getSections().add(m_section);
+                    _model.getUnits().put(_munit.getName(), _munit);
                 }
-                if (!_munit.isValid()) {
-                    Log.e(TAG, "Wrong unit in json: " + unit);
-                    continue;
-                }
-                if (sectionName == null || sectionName.isEmpty()) {
-                    Log.e(TAG, "Wrong section in json: " + unit);
-                    continue;
-                }
-                ModelSection section;
-                if (_model.getSections().containsKey(sectionName)) {
-                    section = _model.getSections().get(sectionName);
-                } else {
-                    section = new ModelSection(sectionName);
-                    _model.getSections().put(section.getName(), section);
-                }
-                if (_munit.getPrimeUnitTitle() != null && !_munit.getPrimeUnitTitle().isEmpty()) {
-                    _model.getPrimeUnits().put(_munit.getName(), _munit);
-                }
-                section.getUnits().add(_munit);
-                _model.getUnits().put(_munit.getName(), _munit);
             }
             model = _model;
             onModelChanged();
@@ -114,9 +127,9 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
     private void sendInitResponseToWearable() {
         String message = "set-values";
         for (ModelUnit unit: getModel().getPrimeUnits().values()) {
-            message += ","+unit.getName();
+            message += ","+unit.getPrimeUnitTitle();
         }
-        new WearableConnector(message).start();
+        new WearableSender(message).start();
         Log.v(TAG, "init response " + message);
     }
 
@@ -136,19 +149,19 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.e(TAG, "mobile onConnectionSuspended cause:"+i);
+        Log.e(TAG, "mobile onConnectionSuspended cause:" + i);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "mobile onConnectionFailed result:"+connectionResult);
+        Log.e(TAG, "mobile onConnectionFailed result:" + connectionResult);
     }
 
     public ModelRFHome getModel() {
         return model;
     }
 
-    private class MessageReceiver extends BroadcastReceiver {
+    private class WearableReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra("wearable", false)) {
@@ -169,11 +182,11 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-    class WearableConnector extends Thread {
+    class WearableSender extends Thread {
         String message;
 
         // Constructor to send a message to the data layer
-        WearableConnector(String msg) {
+        WearableSender(String msg) {
             message = msg;
         }
         public void run() {

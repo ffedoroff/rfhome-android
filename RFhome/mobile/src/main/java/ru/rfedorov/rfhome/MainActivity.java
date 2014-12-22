@@ -43,33 +43,25 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-//        googleClient.connect();
-//        Log.i(TAG, "onStart");
+        Controller.getInstance().mainActivity = this;
+        reCreateUnits();
+        Log.i(TAG, "onStart");
     }
 
     // Disconnect from the data layer when the Activity stops
     @Override
     protected void onStop() {
-//        if (null != googleClient && googleClient.isConnected()) {
-//            googleClient.disconnect();
-//        }
         super.onStop();
+        Controller.getInstance().mainActivity = null;
         Log.i(TAG, "onStop");
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Controller.getInstance().mainActivity = this;
         setContentView(R.layout.activity_main);
-
         if (savedInstanceState == null) {
         }
-
-        reCreateUnits();
-
-
-//        new api().execute(AsyncApiCall.API_GET_JSON, "0");
     }
 
     private void calcButtonStatus(Button btn) {
@@ -87,23 +79,25 @@ public class MainActivity extends Activity {
     public void reCreateUnits() {
         LinearLayout buttons_layout = (LinearLayout) findViewById(R.id.buttons_layout);
         buttons_layout.removeAllViewsInLayout();
-        for (ModelUnit unit: Controller.getInstance().getModel().getUnits().values()) {
-            LinearLayout layout = new LinearLayout(buttons_layout.getContext(), null, R.style.linearForButtons);
-            Button btn = new Button(buttons_layout.getContext());
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-            btn.setLayoutParams(params);
-            btn.setTag(unit);
-            btn.setText(unit.getName());
-            btn.setTextSize(25);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onTriggerClicked(v);
-                }
-            });
-            calcButtonStatus(btn);
-            layout.addView(btn);
-            buttons_layout.addView(layout);
+        for (ModelSection section: Controller.getInstance().getModel().getSections()) {
+            for (ModelUnit unit : section.getUnits()) {
+                LinearLayout layout = new LinearLayout(buttons_layout.getContext(), null, R.style.linearForButtons);
+                Button btn = new Button(buttons_layout.getContext());
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+                btn.setLayoutParams(params);
+                btn.setTag(unit);
+                btn.setText(unit.getName());
+                btn.setTextSize(25);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onTriggerClicked(v);
+                    }
+                });
+                calcButtonStatus(btn);
+                layout.addView(btn);
+                buttons_layout.addView(layout);
+            }
         }
     }
 
@@ -120,6 +114,9 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
+            case R.id.refresh:
+                Controller.getInstance().reloadFromServer();
+                break;
             case R.id.action_settings:
                 Intent userSettingIntent = new Intent(this, UserSettings.class);
                 startActivityForResult(userSettingIntent, RESULT_SETTINGS);

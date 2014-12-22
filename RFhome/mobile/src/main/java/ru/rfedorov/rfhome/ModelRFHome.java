@@ -1,19 +1,23 @@
 package ru.rfedorov.rfhome;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 public class ModelRFHome {
     private String lastAPICallTimeStamp;
     private AbstractMap<String, ModelUnit> units;
-    private AbstractMap<String, ModelSection> sections;
+    private List<ModelSection> sections;
     private AbstractMap<String, ModelUnit> primeUnits;
+    private List<ModelUnit> primeUnitsSorted;
 
     public ModelRFHome(String lastAPICallTimeStamp) {
         this.lastAPICallTimeStamp = lastAPICallTimeStamp;
-        units = new TreeMap<String, ModelUnit>();
-        sections = new TreeMap<String, ModelSection>();
-        primeUnits = new TreeMap<String, ModelUnit>();
+        units = new TreeMap<>();
+        sections = new ArrayList<>();
+        primeUnitsSorted = new ArrayList<>();
+        primeUnits = new TreeMap<>();
     }
 
     public String getlastAPICallTimeStamp() {
@@ -28,7 +32,7 @@ public class ModelRFHome {
         return units;
     }
 
-    public AbstractMap<String, ModelSection> getSections() {
+    public List<ModelSection> getSections() {
         return sections;
     }
 

@@ -2,6 +2,7 @@ package ru.rfedorov.rfhome;
 
 import android.app.Application;
 import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class RFApplication extends Application {
@@ -13,6 +14,7 @@ public class RFApplication extends Application {
         Log.v(TAG, "RFApplication onCreate");
         super.onCreate();
         RFApplication.context = getApplicationContext();
+        //PreferenceManager.setDefaultValues(getAppContext(), R.layout.settings, false);
         Controller.getInstance();
     }
 

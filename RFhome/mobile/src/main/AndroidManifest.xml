@@ -14,12 +14,13 @@
             android:name="ru.rfedorov.rfhome.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
+                <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UserSettings" android:theme="@style/AppTheme" />
-        <activity android:name=".AboutUs" android:theme="@style/AppTheme" />
+        <activity android:name=".UserSettings" />
+        <activity android:name=".AboutUs" />
         <service android:name=".ListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />

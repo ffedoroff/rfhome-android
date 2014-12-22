@@ -2,18 +2,19 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "ru.rfedorov.rfhome"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 10
-        versionName "1.10"
+        versionCode 12
+        versionName "1.12"
     }
     buildTypes {
         release {
-            runProguard false
+            apply plugin: 'idea'
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
