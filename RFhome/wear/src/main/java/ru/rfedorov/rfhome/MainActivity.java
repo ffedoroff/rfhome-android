@@ -25,12 +25,6 @@ import com.google.android.gms.wearable.Wearable;
 
 public class MainActivity extends Activity{
     private static final String TAG = "MainActivityWear";
-    private Button[] buttons;
-    private static final String msgPathMobile = "/rfedorov_mobile";
-
-    GoogleApiClient googleClient;
-
-//    private static final int[] buttons = new int[] { R.id.btn1, R.id.btn1, R.id.btn1, R.id.btn1};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,25 +53,6 @@ public class MainActivity extends Activity{
         pager.setAdapter(new RFHomeGridPagerAdapter(this, getFragmentManager()));
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
-
-//        Log.v(TAG, "onCreate");
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-
-
-//        final WatchViewStub stub = (WatchViewStub) findViewById(R.id.watch_view_stub);
-//        stub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
-//            @Override
-//            public void onLayoutInflated(WatchViewStub stub) {
-//                buttons = new Button[] {
-//                        (Button)findViewById(R.id.btn1),
-//                        (Button)findViewById(R.id.btn2),
-//                        (Button)findViewById(R.id.btn3),
-//                        (Button)findViewById(R.id.btn4)
-//                };
-//            }
-//        });
-//        sendInitMessage();
     }
 
 }

@@ -65,9 +65,14 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         //        }
     }
 
-    private void sendInitRequestToMobile() {
+    public void sendInitRequestToMobile() {
         Log.v(TAG, "sendInitMessage");
         new MobileSender("init").start();
+    }
+
+    public void sendClickToMobile(String data) {
+        Log.v(TAG, "sendClickToMobile");
+        new MobileSender("click,"+data).start();
     }
 
     public void onModelChanged() {

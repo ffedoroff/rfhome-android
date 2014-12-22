@@ -44,6 +44,7 @@ public class Fragment4 extends Fragment {
             if (i<strings.size())
                 buttons[i].setText(strings.get(i));
             buttons[i].setBackgroundResource(R.drawable.bulb_off);
+            buttons[i].setTag(false);
         }
     }
 
@@ -80,18 +81,13 @@ public class Fragment4 extends Fragment {
                             v.setBackgroundResource(R.drawable.bulb_on);
                         }
                         v.setTag(!val);
+
+                        Controller.getInstance().sendClickToMobile(((Button)v).getText().toString());
                     }
                 });
             }
         }
         Controller.getInstance().mainActivity = this;
         Log.i(TAG, "onStart");
-    }
-
-    public void onBtnClicked(View view) {
-
-
-//        if view.getBackground() == R.drawable.bulb_on
-        //new SendToDataLayerThread("click,"+((Button)view).getText()).start();
     }
 }
