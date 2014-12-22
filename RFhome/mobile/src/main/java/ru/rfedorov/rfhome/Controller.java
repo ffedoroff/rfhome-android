@@ -23,8 +23,8 @@ import java.util.Iterator;
 
 public class Controller implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = "Controller";
-    private static final String msgPathWearable = "/rfedorov_watch";
+    private static final String TAG = "ControllerMobile";
+    private static final String msgPath = "/rfedorov_wear";
     GoogleApiClient googleClient;
     private static Controller ourInstance = new Controller();
     private ModelRFHome model;
@@ -180,7 +180,7 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         public void run() {
             NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
             for (Node node : nodes.getNodes()) {
-                MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), msgPathWearable, message.getBytes()).await();
+                MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), msgPath, message.getBytes()).await();
                 if (result.getStatus().isSuccess()) {
                     Log.v(TAG, "Message: {" + message + "} sent to: " + node.getDisplayName());
                 }

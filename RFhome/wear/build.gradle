@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "ru.rfedorov.rfhome"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 21
         versionCode 12
         versionName "1.12"
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.android.support:wearable:1.0.0'
-    compile 'com.google.android.gms:play-services-wearable:6.1.71'
-    compile 'com.android.support:support-v4:21.0.2'
+    compile 'com.google.android.gms:play-services-wearable:6.5.+'
+    compile 'com.android.support:support-v13:21.0.+'
+    compile 'com.google.android.support:wearable:1.1.+'
 }

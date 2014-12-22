@@ -13,7 +13,6 @@
         <item name="android:singleLine">true</item>
         <item name="android:background">@drawable/bulb_off</item>
         <item name="android:gravity">bottom|center</item>
-        <item name="android:onClick">onBtnClicked</item>
     </style>
 
     <style name="layout50horizontal" >
