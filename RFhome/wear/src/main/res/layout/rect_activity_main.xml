@@ -6,8 +6,7 @@
 
     <LinearLayout style="@style/layout50vertical">
         <LinearLayout style="@style/layout50horizontal">
-            <Button style="@style/button1col" android:id="@+id/btn1"
-                android:nestedScrollingEnabled="false" />
+            <Button style="@style/button1col" android:id="@+id/btn1" />
             <Button style="@style/button1col" android:id="@+id/btn2" />
         </LinearLayout>
         <LinearLayout style="@style/layout50horizontal">
