@@ -76,6 +76,7 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
             for (int s = 0; s < sections.length(); s++) {
                 JSONObject j_section = sections.getJSONObject(s);
                 ModelSection m_section = new ModelSection(j_section.getString("name"));
+                _model.getSections().add(m_section);
 
                 JSONArray units = j_section.getJSONArray("units");
                 for (int i = 0; i < units.length(); i++) {
@@ -97,23 +98,10 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
                         Log.e(TAG, "Wrong unit in json: " + unit);
                         continue;
                     }
-//                if (sectionName == null || sectionName.isEmpty()) {
-//                    Log.e(TAG, "Wrong section in json: " + unit);
-//                    continue;
-//                }
-//                ModelSection section;
-//                if (_model.getSections().containsKey(sectionName)) {
-//                    section = _model.getSections().get(sectionName);
-//                } else {
-//                    section = new ModelSection(sectionName);
-//                    _model.getSections().put(section.getName(), section);
-//                }
                     if (_munit.getPrimeUnitTitle() != null && !_munit.getPrimeUnitTitle().isEmpty()) {
                         _model.getPrimeUnits().put(_munit.getPrimeUnitTitle(), _munit);
                     }
-//                section.getUnits().add(_munit);
                     m_section.getUnits().add(_munit);
-                    _model.getSections().add(m_section);
                     _model.getUnits().put(_munit.getName(), _munit);
                 }
             }
