@@ -112,7 +112,7 @@ public class ControllerMobile extends BaseController {
 
     public void onMessageFromWearable(String data) {
         String[] adata = data.split(",");
-        Log.v(TAG, "onMessageFromWearable onReceive " + data);
+//        Log.v(TAG, "onMessageFromWearable onReceive " + data);
         if (adata.length > 0) {
             if (adata.length == 2 && "click".equals(adata[0])) {
                 if (getModel().getPrimeUnits().containsKey(adata[1])) {

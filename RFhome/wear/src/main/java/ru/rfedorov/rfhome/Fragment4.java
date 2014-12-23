@@ -18,6 +18,7 @@ package ru.rfedorov.rfhome;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,15 @@ import java.util.List;
 
 public class Fragment4 extends Fragment {
     private static final String TAG = "Fragment4";
+    // Need handler for callbacks to the UI thread
+    final Handler mHandler = new Handler();
+    // Create runnable for posting
+    final Runnable mUpdateResults = new Runnable() {
+        public void run() {
+            updateResultsInUi();
+        }
+    };
     Button[] buttons = null;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +46,10 @@ public class Fragment4 extends Fragment {
     }
 
     public void UpdateView() {
+        mHandler.post(mUpdateResults);
+    }
+
+    public void updateResultsInUi() {
         Log.i(TAG, "UpdateView");
         List<String> strings = ControllerWear.getInstance().getModel();
         for (int i = 0; i < 4; i++) {

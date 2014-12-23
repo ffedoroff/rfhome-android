@@ -17,7 +17,7 @@ public class ControllerWear extends BaseController {
         Log.v(TAG, "Controller created");
         Init(true);
         model = new ArrayList<>();
-        //sendInitRequestToMobile();
+        sendInitRequestToMobile();
     }
 
     public static ControllerWear getInstance() {
