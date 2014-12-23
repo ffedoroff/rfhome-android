@@ -101,7 +101,7 @@ public class ControllerMobile extends BaseController {
     }
 
     public void onModelChanged() {
-        Log.i(TAG, "onModelChanged " + getModel().getUnits().size());
+//        Log.i(TAG, "onModelChanged " + getModel().getUnits().size());
         sendInitResponseToWearable();
         if (mainActivity != null) mainActivity.reCreateUnits();
     }
