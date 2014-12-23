@@ -6,6 +6,6 @@ public class RFApplication extends BaseApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Controller.getInstance();
+        Controller.getInstance().Init(getApplicationContext(), false);
     }
 }

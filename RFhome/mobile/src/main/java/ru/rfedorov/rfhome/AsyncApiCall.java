@@ -45,7 +45,7 @@ public abstract class AsyncApiCall extends AsyncTask<String, Void, Boolean> {
     }
 
     private String getConfigParameter(String name) {
-        return PreferenceManager.getDefaultSharedPreferences(RFApplication.getAppContext()).getString(name, "");
+        return PreferenceManager.getDefaultSharedPreferences(Controller.getInstance().getAppContext()).getString(name, "");
     }
 
     private Boolean api_message(String... params) {

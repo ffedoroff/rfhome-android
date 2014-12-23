@@ -32,12 +32,7 @@ import java.util.TreeMap;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivityMobile";
-//    private static final String msgWatch = "/rfedorov_watch";
     private static final int RESULT_SETTINGS = 1;
-
-//    private TreeMap<String, TreeMap<String, String>> prime_units;
-
-//    GoogleApiClient googleClient;
 
     // Connect to the data layer when the Activity starts
     @Override

@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".UserSettings" />
         <activity android:name=".AboutUs" />
-        <service android:name=".ListenerService">
+        <service android:name="Controller">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>

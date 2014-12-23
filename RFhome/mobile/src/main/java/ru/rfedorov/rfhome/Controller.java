@@ -21,10 +21,11 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-public class Controller implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+import ru.rfedorov.wear_tools.BaseController;
+
+public class Controller extends BaseController {
     private static final String TAG = "ControllerMobile";
-    private static final String msgPath = "/rfedorov_wear";
+//    private static final String msgPath = "/rfedorov_wear";
     GoogleApiClient googleClient;
     private static Controller ourInstance = new Controller();
     private ModelRFHome model;
@@ -34,29 +35,28 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         return ourInstance;
     }
 
-    private Controller() {
+    public Controller() {
         Log.v(TAG, "Controller created");
         model = new ModelRFHome("0");
-
-        // Register the local broadcast receiver (listens wearable)
-        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
-        WearableReceiver wearableReceiver = new WearableReceiver();
-        LocalBroadcastManager.getInstance(RFApplication.getAppContext()).registerReceiver(wearableReceiver, messageFilter);
-
-        googleClient = new GoogleApiClient.Builder(RFApplication.getAppContext())
-                .addApi(Wearable.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        googleClient.connect();
-
+//
+//        // Register the local broadcast receiver (listens wearable)
+//        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
+//        WearableReceiver wearableReceiver = new WearableReceiver();
+//        LocalBroadcastManager.getInstance(RFApplication.getAppContext()).registerReceiver(wearableReceiver, messageFilter);
+//
+//        googleClient = new GoogleApiClient.Builder(RFApplication.getAppContext())
+//                .addApi(Wearable.API)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .build();
+//        googleClient.connect();
+//
         reloadFromServer();
     }
 
     public void reloadFromServer() {
         new APIConnector().execute(AsyncApiCall.API_GET_JSON, "0");
     }
-
 
     protected void reLoadUnitsFromJson(String json) {
         try {
@@ -117,7 +117,8 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         for (ModelUnit unit: getModel().getPrimeUnits().values()) {
             message += ","+unit.getPrimeUnitTitle();
         }
-        new WearableSender(message).start();
+        this.SendToMobileAsync(message);
+//        new WearableSender(message).start();
         Log.v(TAG, "init response " + message);
     }
 
@@ -128,21 +129,6 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         Log.i(TAG, "onModelChanged "+getModel().getUnits().size());
         sendInitResponseToWearable();
         if (mainActivity != null) mainActivity.reCreateUnits();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.i(TAG, "onConnected");
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.e(TAG, "mobile onConnectionSuspended cause:" + i);
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "mobile onConnectionFailed result:" + connectionResult);
     }
 
     public ModelRFHome getModel() {
@@ -170,25 +156,9 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         }
     }
 
-    class WearableSender extends Thread {
-        String message;
-
-        // Constructor to send a message to the data layer
-        WearableSender(String msg) {
-            message = msg;
-        }
-        public void run() {
-            NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
-            for (Node node : nodes.getNodes()) {
-                MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), msgPath, message.getBytes()).await();
-                if (result.getStatus().isSuccess()) {
-                    Log.v(TAG, "Message: {" + message + "} sent to: " + node.getDisplayName());
-                }
-                else {
-                    Log.e(TAG, "ERROR: failed to send Message to watch: {" + message + "} watch: " + node.getDisplayName());
-                }
-            }
-        }
+    @Override
+    public void onMessageFromWearable(String data) {
+        Log.i(TAG, "onMessageFromWearable "+data);
     }
 
     class APIConnector extends AsyncApiCall {
