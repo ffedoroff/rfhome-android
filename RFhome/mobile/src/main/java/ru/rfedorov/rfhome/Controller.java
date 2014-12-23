@@ -1,19 +1,6 @@
 package ru.rfedorov.rfhome;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,18 +13,20 @@ import ru.rfedorov.wear_tools.BaseController;
 public class Controller extends BaseController {
     private static final String TAG = "ControllerMobile";
 //    private static final String msgPath = "/rfedorov_wear";
-    GoogleApiClient googleClient;
-    private static Controller ourInstance = new Controller();
+//    GoogleApiClient googleClient;
+    private static final Controller singleton = new Controller();
     private ModelRFHome model;
     public MainActivity mainActivity;
 
     public static Controller getInstance() {
-        return ourInstance;
+        return singleton;
     }
 
-    public Controller() {
+    private Controller() {
         Log.v(TAG, "Controller created");
+        Init(false);
         model = new ModelRFHome("0");
+
 //
 //        // Register the local broadcast receiver (listens wearable)
 //        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
@@ -125,6 +114,7 @@ public class Controller extends BaseController {
     public void PostUnitUpdate(String unitName, String newValue) {
         new APIConnector().execute(AsyncApiCall.API_POST_MESSAGE, unitName, newValue);
     }
+
     public void onModelChanged() {
         Log.i(TAG, "onModelChanged "+getModel().getUnits().size());
         sendInitResponseToWearable();
@@ -135,31 +125,47 @@ public class Controller extends BaseController {
         return model;
     }
 
-    private class WearableReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getBooleanExtra("wearable", false)) {
-                String[] data = intent.getStringExtra("data").split(",");
-                Log.v(TAG, "MessageReceiver onReceive "+intent.getStringExtra("data"));
-                if (data.length > 0) {
-                    if (data.length == 2 && "click".equals(data[0])) {
-                        if (getModel().getPrimeUnits().containsKey(data[1])) {
-                            ModelUnit unit = getModel().getPrimeUnits().get(data[1]);
-                            Log.v(TAG, "MessageReceiver click " + unit.getName());
-                            PostUnitUpdate(unit.getName(), String.valueOf(!unit.isTrue()));
-                        }
-                    } else if (data.length == 1 && "init".equals(data[0])) {
-                        sendInitResponseToWearable();
-                    }
+    public void onMessageFromWearable(String data) {
+        String[] adata = data.split(",");
+        Log.v(TAG, "onMessageFromWearable onReceive "+data);
+        if (adata.length > 0) {
+            if (adata.length == 2 && "click".equals(adata[0])) {
+                if (getModel().getPrimeUnits().containsKey(adata[1])) {
+                    ModelUnit unit = getModel().getPrimeUnits().get(adata[1]);
+                    Log.v(TAG, "onMessageFromWearable click " + unit.getName());
+                    PostUnitUpdate(unit.getName(), String.valueOf(!unit.isTrue()));
                 }
+            } else if (adata.length == 1 && "init".equals(adata[0])) {
+                sendInitResponseToWearable();
             }
         }
     }
 
-    @Override
-    public void onMessageFromWearable(String data) {
-        Log.i(TAG, "onMessageFromWearable "+data);
-    }
+//    private class WearableReceiver extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (intent.getBooleanExtra("wearable", false)) {
+//                String[] data = intent.getStringExtra("data").split(",");
+//                Log.v(TAG, "MessageReceiver onReceive "+intent.getStringExtra("data"));
+//                if (data.length > 0) {
+//                    if (data.length == 2 && "click".equals(data[0])) {
+//                        if (getModel().getPrimeUnits().containsKey(data[1])) {
+//                            ModelUnit unit = getModel().getPrimeUnits().get(data[1]);
+//                            Log.v(TAG, "MessageReceiver click " + unit.getName());
+//                            PostUnitUpdate(unit.getName(), String.valueOf(!unit.isTrue()));
+//                        }
+//                    } else if (data.length == 1 && "init".equals(data[0])) {
+//                        sendInitResponseToWearable();
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void onMessageFromWearable(String data) {
+//        Log.i(TAG, "onMessageFromWearable "+data);
+//    }
 
     class APIConnector extends AsyncApiCall {
         @Override
