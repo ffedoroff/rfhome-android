@@ -39,7 +39,7 @@ public class Fragment4 extends Fragment {
 
     public void UpdateView() {
         Log.i(TAG, "UpdateView");
-        List<String> strings = Controller.getInstance().getModel();
+        List<String> strings = ControllerWear.getInstance().getModel();
         for (int i = 0; i < 4; i++) {
             if (i < strings.size())
                 buttons[i].setText(strings.get(i));
@@ -52,7 +52,7 @@ public class Fragment4 extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Controller.getInstance().mainActivity = null;
+        ControllerWear.getInstance().mainActivity = null;
         Log.i(TAG, "onStop");
     }
 
@@ -82,12 +82,12 @@ public class Fragment4 extends Fragment {
                         }
                         v.setTag(!val);
 
-                        Controller.getInstance().sendClickToMobile(((Button) v).getText().toString());
+                        ControllerWear.getInstance().sendClickToMobile(((Button) v).getText().toString());
                     }
                 });
             }
         }
-        Controller.getInstance().mainActivity = this;
+        ControllerWear.getInstance().mainActivity = this;
         Log.i(TAG, "onStart");
     }
 }
