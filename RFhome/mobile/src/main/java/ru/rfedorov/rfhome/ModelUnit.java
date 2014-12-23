@@ -4,7 +4,7 @@ public class ModelUnit {
     private String name;
     private Long lastTrueValueTime;
     private Long lastFalseValueTime;
-//    private Long lastRawValueTime;
+    //    private Long lastRawValueTime;
 //    private String lastRawValue;
     private ModelSection section;
     private String unitType;
@@ -32,15 +32,15 @@ public class ModelUnit {
         this.name = name;
     }
 
-    public Long getLastTrueValueTime() {
-        return lastTrueValueTime;
-    }
+//    public Long getLastTrueValueTime() {
+//        return lastTrueValueTime;
+//    }
 
     public void setLastTrueValueTime(Long lastTrueValueTime) {
         this.lastTrueValueTime = lastTrueValueTime;
     }
 
-    public Boolean isTrue(){
+    public Boolean isTrue() {
         return (lastTrueValueTime != null && lastFalseValueTime != null && lastTrueValueTime > lastFalseValueTime) || (lastTrueValueTime != null && lastFalseValueTime == null);
     }
 
@@ -60,23 +60,23 @@ public class ModelUnit {
 //        this.lastRawValue = lastRawValue;
 //    }
 
-    public String getUnitType() {
-        return unitType;
-    }
+//    public String getUnitType() {
+//        return unitType;
+//    }
 
     public void setUnitType(String unitType) {
         this.unitType = unitType;
     }
 
-    public Long getLastFalseValueTime() {
-        return lastFalseValueTime;
-    }
+//    public Long getLastFalseValueTime() {
+//        return lastFalseValueTime;
+//    }
 
     public void setLastFalseValueTime(Long lastFalseValueTime) {
         this.lastFalseValueTime = lastFalseValueTime;
     }
 
-    public Boolean isValid(){
+    public Boolean isValid() {
         return true;
     }
 

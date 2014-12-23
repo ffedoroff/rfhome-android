@@ -1,14 +1,11 @@
 package ru.rfedorov.rfhome;
 
-import android.content.Context;
-import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 import android.webkit.URLUtil;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -16,25 +13,21 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
 public abstract class AsyncApiCall extends AsyncTask<String, Void, Boolean> {
-    private static final String TAG = "LongOperation";
-//    private Context context;
-    private String ApiJsonText;
-    private String ApiCommand;
-
     static final String API_POST_MESSAGE = "api/message";
     static final String API_GET_JSON = "api/json";
+    private static final String TAG = "LongOperation";
+    //    private Context context;
+    private String ApiJsonText;
+    private String ApiCommand;
 
     private Boolean ValidateConfig() {
 //        String serverUrl = getConfigParameter("prefServerurl");
@@ -45,7 +38,7 @@ public abstract class AsyncApiCall extends AsyncTask<String, Void, Boolean> {
     }
 
     private String getConfigParameter(String name) {
-        return PreferenceManager.getDefaultSharedPreferences(Controller.getInstance().getAppContext()).getString(name, "");
+        return PreferenceManager.getDefaultSharedPreferences(ControllerMobile.getInstance().getAppContext()).getString(name, "");
     }
 
     private Boolean api_message(String... params) {
@@ -63,11 +56,12 @@ public abstract class AsyncApiCall extends AsyncTask<String, Void, Boolean> {
                 httppost.setHeader("Authorization", auth);
             }
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+            List<NameValuePair> nameValuePairs = new ArrayList<>(1);
             nameValuePairs.add(new BasicNameValuePair("updates", outp));
             httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            HttpResponse response = httpclient.execute(httppost);
-            //new LongOperation2().execute("0");
+            httpclient.execute(httppost);
+            // HttpResponse response = httpclient.execute(httppost);
+            // new LongOperation2().execute("0");
             return true;
         } catch (ClientProtocolException e) {
             Log.e(TAG, "ClientProtocolException", e);
@@ -82,7 +76,7 @@ public abstract class AsyncApiCall extends AsyncTask<String, Void, Boolean> {
             return false;
         }
         HttpClient httpclient = new DefaultHttpClient();
-        HttpGet http = new HttpGet(getConfigParameter("prefServerurl") + API_GET_JSON + "?export_time="+params[1]);
+        HttpGet http = new HttpGet(getConfigParameter("prefServerurl") + API_GET_JSON + "?export_time=" + params[1]);
         try {
             String userName = getConfigParameter("prefUsername");
             if (userName != null && !userName.isEmpty()) {
@@ -116,7 +110,7 @@ public abstract class AsyncApiCall extends AsyncTask<String, Void, Boolean> {
             if (params[0].equals(API_GET_JSON))
                 return api_json(params);
         }
-        Log.e(TAG, "wrong api params:" + params);
+        Log.e(TAG, "wrong api params length:" + params.length);
         return false;
     }
 

@@ -10,37 +10,21 @@ import java.util.Iterator;
 
 import ru.rfedorov.wear_tools.BaseController;
 
-public class Controller extends BaseController {
+public class ControllerMobile extends BaseController {
     private static final String TAG = "ControllerMobile";
-//    private static final String msgPath = "/rfedorov_wear";
-//    GoogleApiClient googleClient;
-    private static final Controller singleton = new Controller();
-    private ModelRFHome model;
+    private static final ControllerMobile singleton = new ControllerMobile();
     public MainActivity mainActivity;
+    private ModelRFHome model;
 
-    public static Controller getInstance() {
-        return singleton;
-    }
-
-    private Controller() {
+    private ControllerMobile() {
         Log.v(TAG, "Controller created");
         Init(false);
         model = new ModelRFHome("0");
-
-//
-//        // Register the local broadcast receiver (listens wearable)
-//        IntentFilter messageFilter = new IntentFilter(Intent.ACTION_SEND);
-//        WearableReceiver wearableReceiver = new WearableReceiver();
-//        LocalBroadcastManager.getInstance(RFApplication.getAppContext()).registerReceiver(wearableReceiver, messageFilter);
-//
-//        googleClient = new GoogleApiClient.Builder(RFApplication.getAppContext())
-//                .addApi(Wearable.API)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .build();
-//        googleClient.connect();
-//
         reloadFromServer();
+    }
+
+    public static ControllerMobile getInstance() {
+        return singleton;
     }
 
     public void reloadFromServer() {
@@ -79,7 +63,8 @@ public class Controller extends BaseController {
                         if ("name".equals(key)) _munit.setName(value);
                         if ("false_time".equals(key))
                             _munit.setLastFalseValueTime(Long.parseLong(value));
-                        if ("true_time".equals(key)) _munit.setLastTrueValueTime(Long.parseLong(value));
+                        if ("true_time".equals(key))
+                            _munit.setLastTrueValueTime(Long.parseLong(value));
                         //if ("section".equals(key)) sectionName = value;
                         if ("prime_unit_title".equals(key)) _munit.setPrimeUnitTitle(value);
                     }
@@ -103,10 +88,10 @@ public class Controller extends BaseController {
 
     private void sendInitResponseToWearable() {
         String message = "set-values";
-        for (ModelUnit unit: getModel().getPrimeUnits().values()) {
-            message += ","+unit.getPrimeUnitTitle();
+        for (ModelUnit unit : getModel().getPrimeUnits().values()) {
+            message += "," + unit.getPrimeUnitTitle();
         }
-        this.SendToMobileAsync(message);
+        this.SendToWearableAsync(message);
 //        new WearableSender(message).start();
         Log.v(TAG, "init response " + message);
     }
@@ -116,7 +101,7 @@ public class Controller extends BaseController {
     }
 
     public void onModelChanged() {
-        Log.i(TAG, "onModelChanged "+getModel().getUnits().size());
+        Log.i(TAG, "onModelChanged " + getModel().getUnits().size());
         sendInitResponseToWearable();
         if (mainActivity != null) mainActivity.reCreateUnits();
     }
@@ -127,7 +112,7 @@ public class Controller extends BaseController {
 
     public void onMessageFromWearable(String data) {
         String[] adata = data.split(",");
-        Log.v(TAG, "onMessageFromWearable onReceive "+data);
+        Log.v(TAG, "onMessageFromWearable onReceive " + data);
         if (adata.length > 0) {
             if (adata.length == 2 && "click".equals(adata[0])) {
                 if (getModel().getPrimeUnits().containsKey(adata[1])) {
@@ -141,36 +126,10 @@ public class Controller extends BaseController {
         }
     }
 
-//    private class WearableReceiver extends BroadcastReceiver {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            if (intent.getBooleanExtra("wearable", false)) {
-//                String[] data = intent.getStringExtra("data").split(",");
-//                Log.v(TAG, "MessageReceiver onReceive "+intent.getStringExtra("data"));
-//                if (data.length > 0) {
-//                    if (data.length == 2 && "click".equals(data[0])) {
-//                        if (getModel().getPrimeUnits().containsKey(data[1])) {
-//                            ModelUnit unit = getModel().getPrimeUnits().get(data[1]);
-//                            Log.v(TAG, "MessageReceiver click " + unit.getName());
-//                            PostUnitUpdate(unit.getName(), String.valueOf(!unit.isTrue()));
-//                        }
-//                    } else if (data.length == 1 && "init".equals(data[0])) {
-//                        sendInitResponseToWearable();
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void onMessageFromWearable(String data) {
-//        Log.i(TAG, "onMessageFromWearable "+data);
-//    }
-
     class APIConnector extends AsyncApiCall {
         @Override
         public void onResult(String command, Boolean result, String data) {
-            Log.i(TAG, "onResult "+command+" "+result);
+            Log.i(TAG, "onResult " + command + " " + result);
             if (result) {
                 if (API_GET_JSON.equals(command)) {
                     reLoadUnitsFromJson(data);

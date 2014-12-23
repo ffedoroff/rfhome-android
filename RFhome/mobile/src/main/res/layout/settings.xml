@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="wrap_content"
-                  android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
 
-    <PreferenceCategory android:title="@string/pref_user_profile"
-                        android:layout_width="wrap_content">
+    <PreferenceCategory
+        android:layout_width="wrap_content"
+        android:title="@string/pref_user_profile">
+
         <EditTextPreference
-                android:title="@string/pref_server_url"
-                android:summary="@string/pref_server_url_summary"
-                android:defaultValue="http://demo.rfedorov.ru/"
-                android:key="prefServerurl"/>
+            android:defaultValue="http://demo.rfedorov.ru/"
+            android:key="prefServerurl"
+            android:summary="@string/pref_server_url_summary"
+            android:title="@string/pref_server_url" />
+
         <EditTextPreference
-                android:title="@string/pref_user_name"
-                android:summary="@string/pref_user_name_summary"
-                android:defaultValue=""
-                android:key="prefUsername"/>
+            android:defaultValue=""
+            android:key="prefUsername"
+            android:summary="@string/pref_user_name_summary"
+            android:title="@string/pref_user_name" />
+
         <EditTextPreference
-                android:title="@string/pref_user_password"
-                android:summary="@string/pref_user_password_summary"
-                android:defaultValue=""
-                android:key="prefUserpassword"/>
+            android:defaultValue=""
+            android:key="prefUserpassword"
+            android:summary="@string/pref_user_password_summary"
+            android:title="@string/pref_user_password" />
 
 
     </PreferenceCategory>

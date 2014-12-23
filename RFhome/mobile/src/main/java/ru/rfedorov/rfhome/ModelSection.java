@@ -9,7 +9,7 @@ public class ModelSection {
 
     public ModelSection(String Name) {
         this.name = Name;
-        units = new ArrayList<ModelUnit>();
+        units = new ArrayList<>();
     }
 
     public String getName() {
@@ -20,7 +20,7 @@ public class ModelSection {
         return units;
     }
 
-    public Boolean isValid(){
-        return getName() != null && !getName().isEmpty();
-    }
+//    public Boolean isValid() {
+//        return getName() != null && !getName().isEmpty();
+//    }
 }

@@ -1,12 +1,8 @@
 package ru.rfedorov.rfhome;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,21 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.MessageApi;
-import com.google.android.gms.wearable.Node;
-import com.google.android.gms.wearable.NodeApi;
-import com.google.android.gms.wearable.Wearable;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Iterator;
-import java.util.TreeMap;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivityMobile";
@@ -38,7 +19,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        Controller.getInstance().mainActivity = this;
+        ControllerMobile.getInstance().mainActivity = this;
         reCreateUnits();
         Log.i(TAG, "onStart");
     }
@@ -47,7 +28,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        Controller.getInstance().mainActivity = null;
+        ControllerMobile.getInstance().mainActivity = null;
         Log.i(TAG, "onStop");
     }
 
@@ -55,15 +36,15 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-        }
+//        if (savedInstanceState == null) {
+//        }
     }
 
     private void calcButtonStatus(Button btn) {
         int drawable_id = R.drawable.btn_blue;
-        int icon_id = R.drawable.bulb_off;
-        if (((ModelUnit)btn.getTag()).isTrue()) {
-            icon_id = R.drawable.bulb_on;
+//        int icon_id = R.drawable.bulb_off;
+        if (((ModelUnit) btn.getTag()).isTrue()) {
+//            icon_id = R.drawable.bulb_on;
             drawable_id = R.drawable.btn_gold;
         }
 //        Drawable icon = getApplicationContext().getResources().getDrawable(icon_id);
@@ -74,7 +55,7 @@ public class MainActivity extends Activity {
     public void reCreateUnits() {
         LinearLayout buttons_layout = (LinearLayout) findViewById(R.id.buttons_layout);
         buttons_layout.removeAllViewsInLayout();
-        for (ModelSection section: Controller.getInstance().getModel().getSections()) {
+        for (ModelSection section : ControllerMobile.getInstance().getModel().getSections()) {
             for (ModelUnit unit : section.getUnits()) {
                 LinearLayout layout = new LinearLayout(buttons_layout.getContext(), null, R.style.linearForButtons);
                 Button btn = new Button(buttons_layout.getContext());
@@ -110,7 +91,7 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case R.id.refresh:
-                Controller.getInstance().reloadFromServer();
+                ControllerMobile.getInstance().reloadFromServer();
                 break;
             case R.id.action_settings:
                 Intent userSettingIntent = new Intent(this, UserSettings.class);
@@ -125,7 +106,7 @@ public class MainActivity extends Activity {
     }
 
     public void onTriggerClicked(View view) {
-        ModelUnit unit = (ModelUnit)view.getTag();
-        Controller.getInstance().PostUnitUpdate(unit.getName(), String.valueOf(!unit.isTrue()));
+        ModelUnit unit = (ModelUnit) view.getTag();
+        ControllerMobile.getInstance().PostUnitUpdate(unit.getName(), String.valueOf(!unit.isTrue()));
     }
 }
