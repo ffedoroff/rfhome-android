@@ -23,8 +23,7 @@ public class ListenerService extends WearableListenerService {
             messageIntent.putExtra("data", message);
             Log.v(TAG, "onMessageReceived: " + message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-        }
-        else {
+        } else {
             Log.e(TAG, "onMessageReceived not processed: " + messageEvent.getPath());
             super.onMessageReceived(messageEvent);
         }

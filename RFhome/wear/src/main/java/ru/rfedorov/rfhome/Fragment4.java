@@ -33,15 +33,15 @@ public class Fragment4 extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment4, container, false);
     }
 
     public void UpdateView() {
         Log.i(TAG, "UpdateView");
         List<String> strings = Controller.getInstance().getModel();
-        for (int i=0; i<4; i++) {
-            if (i<strings.size())
+        for (int i = 0; i < 4; i++) {
+            if (i < strings.size())
                 buttons[i].setText(strings.get(i));
             buttons[i].setBackgroundResource(R.drawable.bulb_off);
             buttons[i].setTag(false);
@@ -82,7 +82,7 @@ public class Fragment4 extends Fragment {
                         }
                         v.setTag(!val);
 
-                        Controller.getInstance().sendClickToMobile(((Button)v).getText().toString());
+                        Controller.getInstance().sendClickToMobile(((Button) v).getText().toString());
                     }
                 });
             }

@@ -20,16 +20,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
-import android.os.AsyncTask;
-import android.support.v4.util.LruCache;
 import android.support.wearable.view.CardFragment;
 import android.support.wearable.view.FragmentGridPagerAdapter;
-import android.support.wearable.view.GridPagerAdapter;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +31,7 @@ import java.util.List;
 /**
  * Constructs fragments as requested by the GridViewPager. For each row a different background is
  * provided.
- * <p>
+ * <p/>
  * Always avoid loading resources from the main thread. In this sample, the background images are
  * loaded from an background task and then updated using {@link #notifyRowBackgroundChanged(int)}
  * and {@link #notifyPageBackgroundChanged(int, int)}.
@@ -71,7 +65,7 @@ public class RFHomeGridPagerAdapter extends FragmentGridPagerAdapter {
         mClearBg = new ColorDrawable(android.R.color.transparent);
     }
 
-//    LruCache<Integer, Drawable> mRowBackgrounds = new LruCache<Integer, Drawable>(3) {
+    //    LruCache<Integer, Drawable> mRowBackgrounds = new LruCache<Integer, Drawable>(3) {
 //        @Override
 //        protected Drawable create(final Integer row) {
 //            int resid = BG_IMAGES[row % BG_IMAGES.length];
@@ -132,29 +126,6 @@ public class RFHomeGridPagerAdapter extends FragmentGridPagerAdapter {
 //            R.drawable.bulb_on,
 //    };
 
-    /** A convenient container for a row of fragments. */
-    private class Row {
-        final List<Fragment> columns = new ArrayList<Fragment>();
-
-        public Row(Fragment... fragments) {
-            for (Fragment f : fragments) {
-                add(f);
-            }
-        }
-
-        public void add(Fragment f) {
-            columns.add(f);
-        }
-
-        Fragment getColumn(int i) {
-            return columns.get(i);
-        }
-
-        public int getColumnCount() {
-            return columns.size();
-        }
-    }
-
     @Override
     public Fragment getFragment(int row, int col) {
         Row adapterRow = mRows.get(row);
@@ -181,6 +152,31 @@ public class RFHomeGridPagerAdapter extends FragmentGridPagerAdapter {
     @Override
     public int getColumnCount(int rowNum) {
         return mRows.get(rowNum).getColumnCount();
+    }
+
+    /**
+     * A convenient container for a row of fragments.
+     */
+    private class Row {
+        final List<Fragment> columns = new ArrayList<Fragment>();
+
+        public Row(Fragment... fragments) {
+            for (Fragment f : fragments) {
+                add(f);
+            }
+        }
+
+        public void add(Fragment f) {
+            columns.add(f);
+        }
+
+        Fragment getColumn(int i) {
+            return columns.get(i);
+        }
+
+        public int getColumnCount() {
+            return columns.size();
+        }
     }
 //
 //    class DrawableLoadingTask extends AsyncTask<Integer, Void, Drawable> {

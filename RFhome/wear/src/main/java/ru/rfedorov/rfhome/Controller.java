@@ -22,14 +22,10 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "Controller Wear";
     private static final String msgPath = "/rfedorov_mobile";
-    GoogleApiClient googleClient;
     private static Controller ourInstance = new Controller();
-    private List<String> model;
     public Fragment4 mainActivity;
-
-    public static Controller getInstance() {
-        return ourInstance;
-    }
+    GoogleApiClient googleClient;
+    private List<String> model;
 
     private Controller() {
         Log.v(TAG, "Controller created");
@@ -50,12 +46,16 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         //sendInitRequestToMobile();
     }
 
+    public static Controller getInstance() {
+        return ourInstance;
+    }
+
     protected void reLoadUnitsFromString(String str) {
         Log.v(TAG, "reLoadUnitsFromString");
         String[] strArray = str.split(",");
         if (strArray.length > 1 && strArray[0].equals("set-values")) {
             getModel().clear();
-            for (int i=1; i<strArray.length; i++) {
+            for (int i = 1; i < strArray.length; i++) {
                 getModel().add(strArray[i]);
             }
             onModelChanged();
@@ -72,7 +72,7 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
 
     public void sendClickToMobile(String data) {
         Log.v(TAG, "sendClickToMobile");
-        new MobileSender("click,"+data).start();
+        new MobileSender("click," + data).start();
     }
 
     public void onModelChanged() {
@@ -105,7 +105,7 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         public void onReceive(Context context, Intent intent) {
             if (intent.getBooleanExtra("wear", false)) {
                 String data = intent.getStringExtra("data");
-                Log.v(TAG, "MessageReceiver onReceive "+data);
+                Log.v(TAG, "MessageReceiver onReceive " + data);
                 if (!data.isEmpty()) {
                     reLoadUnitsFromString(data);
                 }
@@ -120,14 +120,14 @@ public class Controller implements GoogleApiClient.ConnectionCallbacks,
         MobileSender(String msg) {
             message = msg;
         }
+
         public void run() {
             NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
             for (Node node : nodes.getNodes()) {
                 MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), msgPath, message.getBytes()).await();
                 if (result.getStatus().isSuccess()) {
                     Log.v(TAG, "Message: {" + message + "} sent to: " + node.getDisplayName());
-                }
-                else {
+                } else {
                     Log.e(TAG, "ERROR: failed to send Message to watch: {" + message + "} watch: " + node.getDisplayName());
                 }
             }
